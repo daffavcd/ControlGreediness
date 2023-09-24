@@ -66,7 +66,9 @@ class _MasukState extends State<Masuk> {
             ),
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 11),
-              child: Image(image: AssetImage("assets/logo-full.png")),
+              child: Image(
+                image: AssetImage("assets/logo-full.png"),
+              ),
             ),
             const SizedBox(
               height: 10,

@@ -236,51 +236,60 @@ class _IncomeState extends State<Income> {
                   const EdgeInsets.symmetric(horizontal: 15, vertical: 16.0),
               child: Column(
                 children: <Widget>[
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 212, 152, 21),
-                      minimumSize: const Size.fromHeight(50), // NEW
-                    ),
-                    onPressed: () {
-                      amountController.clear();
-                      dateController.clear();
-                    },
-                    child: Text(
-                      'Reset',
-                      style: GoogleFonts.rubik(
-                        textStyle: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.white,
+                  Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 212, 152, 21),
+                            minimumSize: const Size.fromHeight(50), // NEW
+                          ),
+                          onPressed: () {
+                            amountController.clear();
+                            dateController.clear();
+                            descriptionController.clear();
+                          },
+                          child: Text(
+                            'Reset',
+                            style: GoogleFonts.rubik(
+                              textStyle: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color.fromARGB(255, 65, 131, 255),
-                      minimumSize: const Size.fromHeight(50), // NEW
-                    ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        // context.loaderOverlay.show();
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor:
+                                const Color.fromARGB(255, 65, 131, 255),
+                            minimumSize: const Size.fromHeight(50), // NEW
+                          ),
+                          onPressed: () {
+                            if (_formKey.currentState!.validate()) {
+                              // context.loaderOverlay.show();
 
-                        // context.loaderOverlay.hide();
-                      }
-                    },
-                    child: Text(
-                      'Save',
-                      style: GoogleFonts.rubik(
-                        textStyle: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 20,
-                          color: Colors.white,
+                              // context.loaderOverlay.hide();
+                            }
+                          },
+                          child: Text(
+                            'Save',
+                            style: GoogleFonts.rubik(
+                              textStyle: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 20,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
                   const SizedBox(
                     height: 10,
