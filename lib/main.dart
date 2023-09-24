@@ -1,115 +1,212 @@
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import 'pages/dashboard.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const MaterialApp(home: Masuk()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class Masuk extends StatefulWidget {
+  const Masuk({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<Masuk> createState() => _MasukState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _MasukState extends State<Masuk> {
+  final _formKey = GlobalKey<FormState>();
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
 
-  void _incrementCounter() {
+  bool _obscureText = true;
+  // Toggles the password show status
+  void _toggle() {
     setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+      _obscureText = !_obscureText;
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+  void initState() {
+    super.initState();
+  }
+
+  Future<void> login() async {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const Dashboard(),
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LoaderOverlay(
+      overlayColor: Color.fromARGB(73, 0, 170, 20),
+      useDefaultLoading: false,
+      overlayOpacity: 0.4,
+      overlayWidget: const Center(
+        child: SpinKitWanderingCubes(
+          color: Color.fromARGB(255, 0, 170, 19),
+          size: 50.0,
+        ),
+      ),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        resizeToAvoidBottomInset: false,
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+            const SizedBox(
+              height: 150,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 11),
+              child: Image(image: AssetImage("assets/logo-full.png")),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Form(
+              key: _formKey,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 11),
+                    child: TextFormField(
+                      style: GoogleFonts.rubik(
+                        textStyle:
+                            const TextStyle(fontWeight: FontWeight.normal),
+                      ),
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      controller: usernameController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(
+                                255, 0, 170, 19), // Set border color
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(
+                                255, 0, 170, 19), // Set focused border color
+                          ),
+                        ),
+                        hintText: 'Username',
+                        filled: true,
+                        fillColor: Color.fromARGB(
+                            255, 255, 255, 255), // Set fill color
+                        labelText: 'Username',
+                        labelStyle: TextStyle(
+                          color: Color.fromARGB(
+                              255, 0, 170, 19), // Set label color
+                        ),
+                      ),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please fill the username.';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 11),
+                    child: TextFormField(
+                      style: GoogleFonts.rubik(
+                        textStyle:
+                            const TextStyle(fontWeight: FontWeight.normal),
+                      ),
+                      obscureText: _obscureText,
+                      enableSuggestions: false,
+                      autocorrect: false,
+                      controller: passwordController,
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            _toggle();
+                          },
+                          icon: Icon(
+                            _obscureText
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                            color: const Color.fromARGB(
+                                255, 0, 170, 19), // Set icon color
+                          ),
+                        ),
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(
+                                255, 0, 170, 19), // Set border color
+                          ),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color.fromARGB(
+                                255, 0, 170, 19), // Set focused border color
+                          ),
+                        ),
+                        hintText: 'Password',
+                        filled: true,
+                        fillColor: const Color.fromARGB(
+                            255, 255, 255, 255), // Set fill color
+                        labelText: 'Password',
+                        labelStyle: const TextStyle(
+                          color: Color.fromARGB(
+                              255, 0, 170, 19), // Set label color
+                        ),
+                      ),
+                      autovalidateMode: AutovalidateMode.onUserInteraction,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please fill the password.';
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 16.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 0, 170, 19),
+                        minimumSize: const Size.fromHeight(50), // NEW
+                      ),
+                      onPressed: () async {
+                        if (_formKey.currentState!.validate()) {
+                          // context.loaderOverlay.show();
+                          await login();
+                          // context.loaderOverlay.hide();
+                        }
+                      },
+                      child: Text(
+                        'Log In',
+                        style: GoogleFonts.rubik(
+                          textStyle: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 20,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
