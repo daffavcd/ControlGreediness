@@ -5,6 +5,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'package:fl_chart/fl_chart.dart';
 
+import '../helpers/transactionHelper.dart';
+import 'package:intl/intl.dart';
+
 import 'history.dart';
 import 'income.dart';
 import 'outcome.dart';
@@ -304,10 +307,46 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   late bool isShowingMainData;
+  List histories = [];
+  String totalOutcome = "0";
+  String totalIncome = "0";
+
+  TransactionHelper transactionHelper = TransactionHelper();
+
+  Future initialize() async {
+    double incomeTotal = 0;
+    double outcomeTotal = 0;
+
+    try {
+      var transactions = await transactionHelper.fetchTransactions();
+
+      for (var transaction in transactions) {
+        if (transaction.type == "Income") {
+          incomeTotal += double.parse(transaction.amount);
+        } else {
+          outcomeTotal += double.parse(transaction.amount);
+        }
+      }
+
+      setState(() {
+        histories = transactions;
+        totalIncome = formatAmount(incomeTotal);
+        totalOutcome = formatAmount(outcomeTotal);
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  String formatAmount(double amount) {
+    final formatter = NumberFormat("#,##0.00", "id_ID");
+    return formatter.format(amount);
+  }
 
   @override
   void initState() {
     super.initState();
+    initialize();
     isShowingMainData = true;
   }
 
@@ -352,7 +391,7 @@ class _DashboardState extends State<Dashboard> {
               child: Column(
                 children: <Widget>[
                   Text(
-                    "Outcome : Rp. 500.000",
+                    "Outcome : Rp. $totalOutcome",
                     style: GoogleFonts.rubik(
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.w600,
@@ -366,7 +405,7 @@ class _DashboardState extends State<Dashboard> {
                     height: 10,
                   ),
                   Text(
-                    "Income : Rp. 500.000",
+                    "Income : Rp. $totalIncome",
                     style: GoogleFonts.rubik(
                       textStyle: const TextStyle(
                         fontWeight: FontWeight.w600,

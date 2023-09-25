@@ -7,6 +7,9 @@ import 'package:intl/intl.dart';
 import 'dashboard.dart';
 import 'package:flutter/services.dart';
 
+import '../helpers/transactionHelper.dart';
+import '../models/transaction.dart';
+
 class History extends StatefulWidget {
   const History({super.key});
 
@@ -15,19 +18,20 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
-  int historyCount = 3;
-  List history = [];
+  List histories = [];
+
+  TransactionHelper transactionHelper = TransactionHelper();
 
   Future initialize() async {
-    // history = [];
-    // setState(() {
-    //   historyCount = history.length;
-    //   history = history;
-    // });
-    setState(() {
-      history = [];
-      historyCount = history.length;
-    });
+    try {
+      var transactions = await transactionHelper.fetchTransactions();
+
+      setState(() {
+        histories = transactions;
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
@@ -72,73 +76,82 @@ class _HistoryState extends State<History> {
                 ),
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
             Expanded(
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 16.0),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      Card(
-                        elevation: 3.0, // Adjust the elevation as needed
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              10.0), // Adjust the border radius as needed
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 0, vertical: 8.0),
-                          child: ListTile(
-                            trailing: const CircleAvatar(
-                              backgroundColor: Color.fromARGB(255, 223, 11, 11),
-                              radius: 25,
-                              child: Icon(
-                                Icons.remove,
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                size: 50.0,
-                              ), //CircleAvatar
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: histories.length,
+                        itemBuilder: (context, index) {
+                          final transaction = histories[index];
+                          return Card(
+                            elevation: 3.0, // Adjust the elevation as needed
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  10.0), // Adjust the border radius as needed
                             ),
-                            title: Text(
-                              "[-] Rp. 2500000",
-                              style: GoogleFonts.rubik(
-                                textStyle: const TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 23,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 0, vertical: 8.0),
+                              child: ListTile(
+                                trailing: CircleAvatar(
+                                  backgroundColor: transaction.type == "Income"
+                                      ? const Color.fromARGB(255, 4, 151, 22)
+                                      : const Color.fromARGB(255, 223, 11, 11),
+                                  radius: 25,
+                                  child: Icon(
+                                    transaction.type == "Income"
+                                        ? Icons.add
+                                        : Icons.remove,
+                                    color: const Color.fromARGB(
+                                        255, 255, 255, 255),
+                                    size: 50.0,
+                                  ), //CircleAvatar
+                                ),
+                                title: Text(
+                                  "${transaction.type == 'Income' ? '[+] ' : '[-] '}${transaction.amount}",
+                                  style: GoogleFonts.rubik(
+                                    textStyle: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 23,
+                                    ),
+                                  ),
+                                ),
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text(
+                                      transaction.description,
+                                      style: GoogleFonts.rubik(
+                                        textStyle: const TextStyle(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 18,
+                                          color: Colors.black87,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      transaction.date,
+                                      style: GoogleFonts.rubik(
+                                        textStyle: const TextStyle(
+                                          fontWeight: FontWeight.w300,
+                                          fontSize: 17,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                  'Pembayaran Iuran kas',
-                                  style: GoogleFonts.rubik(
-                                    textStyle: const TextStyle(
-                                      fontWeight: FontWeight.w400,
-                                      fontSize: 18,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                  '24 September 2023',
-                                  style: GoogleFonts.rubik(
-                                    textStyle: const TextStyle(
-                                      fontWeight: FontWeight.w300,
-                                      fontSize: 17,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                          );
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),
