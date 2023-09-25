@@ -4,6 +4,7 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import 'dashboard.dart';
+import '../helpers/userHelper.dart';
 
 class Setting extends StatefulWidget {
   const Setting({super.key});
@@ -20,6 +21,7 @@ class _SettingState extends State<Setting> {
   bool _obscureTextOld = true;
   bool _obscureTextNew = true;
 
+  UserHelper userHelper = UserHelper();
   // Toggles the password show status
   void _toggleOld() {
     setState(() {
@@ -34,12 +36,30 @@ class _SettingState extends State<Setting> {
   }
 
   Future<void> changePassword() async {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const Dashboard(),
-      ),
-    );
+    try {
+      FocusManager.instance.primaryFocus?.unfocus();
+
+      context.loaderOverlay.show();
+
+      // CHECK first if the old password correct
+      if (await userHelper.signIn("user", oldPasswordController.text)) {
+        await userHelper.updatePassword(newPasswordController.text);
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Password successfully updated!')),
+        );
+        oldPasswordController.clear();
+        // Redirect to dashboard
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Wrong Old Password!')),
+        );
+      }
+
+      context.loaderOverlay.hide();
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override

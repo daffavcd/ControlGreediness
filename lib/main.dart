@@ -3,6 +3,8 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../helpers/userHelper.dart';
+
 import 'pages/dashboard.dart';
 
 void main() {
@@ -33,8 +35,9 @@ class _MasukState extends State<Masuk> {
   final _formKey = GlobalKey<FormState>();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
-
   bool _obscureText = true;
+  UserHelper userHelper = UserHelper();
+
   // Toggles the password show status
   void _toggle() {
     setState(() {
@@ -48,12 +51,34 @@ class _MasukState extends State<Masuk> {
   }
 
   Future<void> login() async {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => const Dashboard(),
-      ),
-    );
+    try {
+      FocusManager.instance.primaryFocus?.unfocus();
+
+      context.loaderOverlay.show();
+
+      if (await userHelper.signIn(
+          usernameController.text, passwordController.text)) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Login Sucess!')),
+        );
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const Dashboard(),
+          ),
+        );
+        // Redirect to dashboard
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Wrong Username Or Password!')),
+        );
+      }
+
+      context.loaderOverlay.hide();
+    } catch (e) {
+      print(e);
+    }
   }
 
   @override
