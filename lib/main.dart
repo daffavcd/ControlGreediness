@@ -6,7 +6,20 @@ import 'package:google_fonts/google_fonts.dart';
 import 'pages/dashboard.dart';
 
 void main() {
-  runApp(const MaterialApp(home: Masuk()));
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+        primaryColor: const Color.fromARGB(255, 0, 170, 19),
+      ),
+      home: const Masuk(),
+    );
+  }
 }
 
 class Masuk extends StatefulWidget {
