@@ -7,6 +7,10 @@ import 'package:intl/intl.dart';
 import 'dashboard.dart';
 import 'package:flutter/services.dart';
 
+import 'package:sqflite/sqflite.dart';
+import '../helpers/transactionHelper.dart';
+import '../models/transaction.dart';
+
 class Income extends StatefulWidget {
   const Income({super.key});
 
@@ -19,6 +23,41 @@ class _IncomeState extends State<Income> {
   final dateController = TextEditingController();
   final amountController = TextEditingController();
   final descriptionController = TextEditingController();
+
+  TransactionHelper transactionHelper = TransactionHelper();
+
+  Future<void> insertIncome() async {
+    try {
+      FocusManager.instance.primaryFocus?.unfocus();
+
+      final transaction = TransactionModel(
+        date: dateController.text,
+        amount: amountController.text,
+        description: descriptionController.text,
+        type: "Income",
+      );
+
+      context.loaderOverlay.show();
+      await transactionHelper.addItem(transaction);
+      context.loaderOverlay.hide();
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Data successfully added.')),
+      );
+
+      amountController.clear();
+      dateController.clear();
+      descriptionController.clear();
+
+      var transactions = await transactionHelper.fetchTransactions();
+      for (var transaction in transactions) {
+        print(transaction.toString());
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -272,9 +311,7 @@ class _IncomeState extends State<Income> {
                           ),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              // context.loaderOverlay.show();
-
-                              // context.loaderOverlay.hide();
+                              insertIncome();
                             }
                           },
                           child: Text(

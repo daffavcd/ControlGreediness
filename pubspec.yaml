@@ -45,6 +45,7 @@ dependencies:
   syncfusion_flutter_charts: ^23.1.36
   fl_chart: ^0.62.0
   flutter_launcher_icons: ^0.12.0
+  path_provider: ^2.1.0
 
 dev_dependencies:
   flutter_test:
