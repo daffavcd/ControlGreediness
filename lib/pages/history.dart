@@ -34,6 +34,12 @@ class _HistoryState extends State<History> {
     }
   }
 
+  String formatAmount(String amount) {
+    var doubleFormatted = double.parse(amount);
+    final formatter = NumberFormat("#,##0.00", "id_ID");
+    return formatter.format(doubleFormatted);
+  }
+
   @override
   void initState() {
     initialize();
@@ -113,7 +119,7 @@ class _HistoryState extends State<History> {
                                   ), //CircleAvatar
                                 ),
                                 title: Text(
-                                  "${transaction.type == 'Income' ? '[+] ' : '[-] '}${transaction.amount}",
+                                  "${transaction.type == 'Income' ? '[+] ' : '[-] '}Rp ${formatAmount(transaction.amount)}",
                                   style: GoogleFonts.rubik(
                                     textStyle: const TextStyle(
                                       fontWeight: FontWeight.w500,
