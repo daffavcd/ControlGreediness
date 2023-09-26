@@ -26,6 +26,13 @@ class _HistoryState extends State<History> {
     try {
       var transactions = await transactionHelper.fetchTransactions();
 
+      // SORT BY DATE
+      transactions.sort((a, b) {
+        final dateA = DateFormat("yMMMMd", "en_US").parse(a.date);
+        final dateB = DateFormat("yMMMMd", "en_US").parse(b.date);
+        return dateB.compareTo(dateA);
+      });
+
       setState(() {
         histories = transactions;
       });

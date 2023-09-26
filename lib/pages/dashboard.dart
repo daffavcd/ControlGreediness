@@ -14,15 +14,12 @@ import 'outcome.dart';
 import 'setting.dart';
 
 class _LineChart extends StatelessWidget {
-  const _LineChart({required this.isShowingMainData});
-
-  final bool isShowingMainData;
+  const _LineChart({required this.histories});
+  final List histories;
 
   @override
   Widget build(BuildContext context) {
-    return LineChart(
-      isShowingMainData ? sampleData1 : sampleData2,
-    );
+    return LineChart(sampleData1);
   }
 
   LineChartData get sampleData1 => LineChartData(
@@ -32,19 +29,7 @@ class _LineChart extends StatelessWidget {
         borderData: borderData,
         lineBarsData: lineBarsData1,
         minX: 0,
-        maxX: 14,
-        maxY: 4,
-        minY: 0,
-      );
-
-  LineChartData get sampleData2 => LineChartData(
-        lineTouchData: lineTouchData2,
-        gridData: gridData,
-        titlesData: titlesData2,
-        borderData: borderData,
-        lineBarsData: lineBarsData2,
-        minX: 0,
-        maxX: 14,
+        maxX: 3,
         maxY: 6,
         minY: 0,
       );
@@ -52,7 +37,7 @@ class _LineChart extends StatelessWidget {
   LineTouchData get lineTouchData1 => LineTouchData(
         handleBuiltInTouches: true,
         touchTooltipData: LineTouchTooltipData(
-          tooltipBgColor: Colors.blueGrey.withOpacity(0.8),
+          tooltipBgColor: Color.fromARGB(255, 0, 0, 0).withOpacity(0.8),
         ),
       );
 
@@ -72,34 +57,8 @@ class _LineChart extends StatelessWidget {
       );
 
   List<LineChartBarData> get lineBarsData1 => [
-        lineChartBarData1_1,
-        lineChartBarData1_2,
-        lineChartBarData1_3,
-      ];
-
-  LineTouchData get lineTouchData2 => LineTouchData(
-        enabled: false,
-      );
-
-  FlTitlesData get titlesData2 => FlTitlesData(
-        bottomTitles: AxisTitles(
-          sideTitles: bottomTitles,
-        ),
-        rightTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        topTitles: AxisTitles(
-          sideTitles: SideTitles(showTitles: false),
-        ),
-        leftTitles: AxisTitles(
-          sideTitles: leftTitles(),
-        ),
-      );
-
-  List<LineChartBarData> get lineBarsData2 => [
-        lineChartBarData2_1,
-        lineChartBarData2_2,
-        lineChartBarData2_3,
+        lineChartBarData1_Income,
+        lineChartBarData1_Outcome,
       ];
 
   Widget leftTitleWidgets(double value, TitleMeta meta) {
@@ -110,19 +69,22 @@ class _LineChart extends StatelessWidget {
     String text;
     switch (value.toInt()) {
       case 1:
-        text = '1m';
+        text = 'Rp 10k';
         break;
       case 2:
-        text = '2m';
+        text = 'Rp 50k';
         break;
       case 3:
-        text = '3m';
+        text = 'Rp 100k';
         break;
       case 4:
-        text = '5m';
+        text = 'Rp 500k';
         break;
       case 5:
-        text = '6m';
+        text = 'Rp 1000k';
+        break;
+      case 6:
+        text = 'Rp 10000k';
         break;
       default:
         return Container();
@@ -143,16 +105,17 @@ class _LineChart extends StatelessWidget {
       fontWeight: FontWeight.bold,
       fontSize: 16,
     );
+
     Widget text;
     switch (value.toInt()) {
+      case 0:
+        text = const Text('AUG', style: style);
+        break;
+      case 1:
+        text = const Text('SEP', style: style);
+        break;
       case 2:
-        text = const Text('SEPT', style: style);
-        break;
-      case 7:
         text = const Text('OCT', style: style);
-        break;
-      case 12:
-        text = const Text('DEC', style: style);
         break;
       default:
         text = const Text('');
@@ -179,7 +142,7 @@ class _LineChart extends StatelessWidget {
         show: true,
         border: Border(
           bottom: BorderSide(
-              color: Color.fromARGB(255, 0, 170, 19).withOpacity(0.2),
+              color: const Color.fromARGB(255, 2, 172, 22).withOpacity(0.2),
               width: 4),
           left: const BorderSide(color: Colors.transparent),
           right: const BorderSide(color: Colors.transparent),
@@ -187,115 +150,119 @@ class _LineChart extends StatelessWidget {
         ),
       );
 
-  LineChartBarData get lineChartBarData1_1 => LineChartBarData(
+  LineChartBarData get lineChartBarData1_Income => LineChartBarData(
         isCurved: true,
-        color: Color.fromARGB(255, 0, 170, 19),
+        color: const Color.fromARGB(255, 0, 255, 30),
         barWidth: 8,
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 1.5),
-          FlSpot(5, 1.4),
-          FlSpot(7, 3.4),
-          FlSpot(10, 2),
-          FlSpot(12, 2.2),
-          FlSpot(13, 1.8),
-        ],
+        spots: _getIncomeSpots(),
       );
 
-  LineChartBarData get lineChartBarData1_2 => LineChartBarData(
+  LineChartBarData get lineChartBarData1_Outcome => LineChartBarData(
         isCurved: true,
-        color: Color.fromARGB(255, 187, 2, 178),
-        barWidth: 8,
-        isStrokeCapRound: true,
-        dotData: FlDotData(show: false),
-        belowBarData: BarAreaData(
-          show: false,
-          color: Color.fromARGB(255, 187, 2, 178).withOpacity(0),
-        ),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 2.8),
-          FlSpot(7, 1.2),
-          FlSpot(10, 2.8),
-          FlSpot(12, 2.6),
-          FlSpot(13, 3.9),
-        ],
-      );
-
-  LineChartBarData get lineChartBarData1_3 => LineChartBarData(
-        isCurved: true,
-        color: Color.fromARGB(255, 6, 181, 212),
+        color: const Color.fromARGB(255, 255, 0, 0),
         barWidth: 8,
         isStrokeCapRound: true,
         dotData: FlDotData(show: false),
         belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 2.8),
-          FlSpot(3, 1.9),
-          FlSpot(6, 3),
-          FlSpot(10, 1.3),
-          FlSpot(13, 2.5),
-        ],
+        spots: _getOutcomeSpots(),
       );
 
-  LineChartBarData get lineChartBarData2_1 => LineChartBarData(
-        isCurved: true,
-        curveSmoothness: 0,
-        color: Color.fromARGB(255, 0, 170, 19).withOpacity(0.5),
-        barWidth: 4,
-        isStrokeCapRound: true,
-        dotData: FlDotData(show: false),
-        belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 4),
-          FlSpot(5, 1.8),
-          FlSpot(7, 5),
-          FlSpot(10, 2),
-          FlSpot(12, 2.2),
-          FlSpot(13, 1.8),
-        ],
-      );
+  List<FlSpot> _getIncomeSpots() {
+    List<FlSpot> incomeSpots = [];
 
-  LineChartBarData get lineChartBarData2_2 => LineChartBarData(
-        isCurved: true,
-        color: Color.fromARGB(255, 187, 2, 178).withOpacity(0.5),
-        barWidth: 4,
-        isStrokeCapRound: true,
-        dotData: FlDotData(show: false),
-        belowBarData: BarAreaData(
-          show: true,
-          color: Color.fromARGB(255, 187, 2, 178).withOpacity(0.2),
-        ),
-        spots: const [
-          FlSpot(1, 1),
-          FlSpot(3, 2.8),
-          FlSpot(7, 1.2),
-          FlSpot(10, 2.8),
-          FlSpot(12, 2.6),
-          FlSpot(13, 3.9),
-        ],
-      );
+    // Sort the histories list by date
+    histories.sort((a, b) {
+      final dateA = DateFormat("yMMMMd", "en_US").parse(a.date);
+      final dateB = DateFormat("yMMMMd", "en_US").parse(b.date);
+      return dateA.compareTo(dateB);
+    });
 
-  LineChartBarData get lineChartBarData2_3 => LineChartBarData(
-        isCurved: true,
-        curveSmoothness: 0,
-        color: Color.fromARGB(255, 6, 181, 212).withOpacity(0.5),
-        barWidth: 2,
-        isStrokeCapRound: true,
-        dotData: FlDotData(show: true),
-        belowBarData: BarAreaData(show: false),
-        spots: const [
-          FlSpot(1, 3.8),
-          FlSpot(3, 1.9),
-          FlSpot(6, 5),
-          FlSpot(10, 3.3),
-          FlSpot(13, 4.5),
-        ],
-      );
+    for (int i = 0; i < histories.length; i++) {
+      final history = histories[i];
+      if (history.type == "Income") {
+        final incomeValue = double.parse(history.amount);
+        double mappedValue;
+        double monthInNumber;
+
+        // Convert the date to a DateTime object
+        final transactionDate =
+            DateFormat("yMMMMd", "en_US").parse(history.date);
+
+        // Extract the month as a double
+        monthInNumber = transactionDate.month.toDouble();
+
+        if (incomeValue <= 10000) {
+          mappedValue = 1; // Represents 0-10000
+        } else if (incomeValue <= 50000) {
+          mappedValue = 2; // Represents 10000-50000
+        } else if (incomeValue <= 100000) {
+          mappedValue = 3; // Represents 'Rp 100k'
+        } else if (incomeValue <= 500000) {
+          mappedValue = 4; // Represents 'Rp 500k'
+        } else if (incomeValue <= 1000000) {
+          mappedValue = 5; // Represents 'Rp 1000k'
+        } else {
+          mappedValue = 6; // Represents 'Rp 10000k'
+        }
+        // CHANGE THE MINUS (-8.0) TO ADJUSTING THE LEAST OF THREE MONTH THAT YOU WANT (ASUMING I WANTT THE STARTING CHART TO BE AUGUST)
+        // THE LIBRARY IS TOO LIMITED, IT"S ONLY PROVIDE STATIC GODDAMMINT
+        incomeSpots.add(FlSpot(monthInNumber - 8.0, mappedValue));
+      }
+    }
+
+    // print(incomeSpots);
+    return incomeSpots;
+  }
+
+  List<FlSpot> _getOutcomeSpots() {
+    List<FlSpot> outcomeSpots = [];
+
+    // Sort the histories list by date
+    histories.sort((a, b) {
+      final dateA = DateFormat("yMMMMd", "en_US").parse(a.date);
+      final dateB = DateFormat("yMMMMd", "en_US").parse(b.date);
+      return dateA.compareTo(dateB);
+    });
+
+    for (int i = 0; i < histories.length; i++) {
+      final history = histories[i];
+      if (history.type == "Outcome") {
+        final outcomeValue = double.parse(history.amount);
+        double mappedValue;
+        double monthInNumber;
+
+        // Convert the date to a DateTime object
+        final transactionDate =
+            DateFormat("yMMMMd", "en_US").parse(history.date);
+
+        // Extract the month as a double
+        monthInNumber = transactionDate.month.toDouble();
+
+        if (outcomeValue <= 10000) {
+          mappedValue = 1; // Represents 0-10000
+        } else if (outcomeValue <= 50000) {
+          mappedValue = 2; // Represents 10000-50000
+        } else if (outcomeValue <= 100000) {
+          mappedValue = 3; // Represents 'Rp 100k'
+        } else if (outcomeValue <= 500000) {
+          mappedValue = 4; // Represents 'Rp 500k'
+        } else if (outcomeValue <= 1000000) {
+          mappedValue = 5; // Represents 'Rp 1000k'
+        } else {
+          mappedValue = 6; // Represents 'Rp 10000k'
+        }
+        // CHANGE THE MINUS (-8.0) TO ADJUSTING THE LEAST OF THREE MONTH THAT YOU WANT (ASUMING I WANTT THE STARTING CHART TO BE AUGUST)
+        // THE LIBRARY IS TOO LIMITED, IT"S ONLY PROVIDE STATIC GODDAMMINT
+        outcomeSpots.add(FlSpot(monthInNumber - 8.0, mappedValue));
+      }
+    }
+    // print(outcomeSpots);
+
+    return outcomeSpots;
+  }
 }
 
 class Dashboard extends StatefulWidget {
@@ -306,7 +273,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  late bool isShowingMainData;
   List histories = [];
   String totalOutcome = "0";
   String totalIncome = "0";
@@ -320,11 +286,23 @@ class _DashboardState extends State<Dashboard> {
     try {
       var transactions = await transactionHelper.fetchTransactions();
 
+      // Get the current date
+      final now = DateTime.now();
+
       for (var transaction in transactions) {
-        if (transaction.type == "Income") {
-          incomeTotal += double.parse(transaction.amount);
-        } else {
-          outcomeTotal += double.parse(transaction.amount);
+        // Parse the transaction date string into a DateTime object
+        final transactionDate =
+            DateFormat("yMMMMd", "en_US").parse(transaction.date);
+        // print(transactionDate);
+        // Check if the transaction date is in the current month and year
+        if (transactionDate.month == now.month &&
+            transactionDate.year == now.year) {
+          if (transaction.type == "Income") {
+            incomeTotal += double.parse(transaction.amount);
+            // print(incomeTotal);
+          } else {
+            outcomeTotal += double.parse(transaction.amount);
+          }
         }
       }
 
@@ -347,7 +325,6 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
     initialize();
-    isShowingMainData = true;
   }
 
   @override
@@ -423,7 +400,7 @@ class _DashboardState extends State<Dashboard> {
             ),
             // CHART HERE
             Text(
-              'Financial Transaction',
+              'Recent Activity Chart',
               style: GoogleFonts.rubik(
                 textStyle: const TextStyle(
                   fontWeight: FontWeight.w500,
@@ -439,7 +416,7 @@ class _DashboardState extends State<Dashboard> {
             Expanded(
               child: Padding(
                 padding: const EdgeInsets.only(right: 16, left: 6),
-                child: _LineChart(isShowingMainData: isShowingMainData),
+                child: _LineChart(histories: histories),
               ),
             ),
             Padding(
