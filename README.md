@@ -1,16 +1,23 @@
-# control_greediness
+# Finnance Mobile App
 
-A new Flutter project.
+## Sign In page
+<img src="/sss/1.png" title="Screenshot 1"/>
 
-## Getting Started
+## Dashboard
+<img src="/sss/2.png" title="Screenshot 2"/>
 
-This project is a starting point for a Flutter application.
+## History Cash Flow
+<img src="/sss/3.jpeg" title="Screenshot 3"/>
 
-A few resources to get you started if this is your first Flutter project:
+## Add Income
+<img src="/sss/4.jpeg" title="Screenshot 4"/>
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Add Outcome
+<img src="/sss/5.jpeg" title="Screenshot 5"/>
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Change Password
+<img src="/sss/6.jpeg" title="Screenshot 6"/>
+
+## Control Grediness
+
+SQLite, Line Fl Chart Flutter.
